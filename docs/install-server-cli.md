@@ -36,9 +36,9 @@ Running `nakama doctor` generates a report that details the server's configurati
 
 Nakama comes with a default configuration which can be overriden by using a [YML Configuration](install-configuration.md) file or by passing command line flags like below:
 
-```shell
-nakama --config path/to/config.yml --database.address root@localhost:26257 --database.address root@machine-2:26257
-```
+	```shell
+	nakama --config path/to/config.yml --database.address root@localhost:26257 --database.address root@machine-2:26257
+	```
 
 !!! tip "Configuration Priority"
     Command line flags override options set in a config file. Configuration file overrides default config options.

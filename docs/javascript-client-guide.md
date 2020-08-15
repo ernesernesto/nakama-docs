@@ -8,9 +8,9 @@ The client is available on <a href="https://www.npmjs.com/package/@heroiclabs/na
 
 If you are using NPM simply add the dependency to your "package.json":
 
-```shell
-yarn add "@heroiclabs/nakama-js"
-```
+	```shell
+	yarn add "@heroiclabs/nakama-js"
+	```
 
 For upgrades you can see changes and enhancements in the <a href="https://github.com/heroiclabs/nakama-js/blob/master/CHANGELOG.md" target="\_blank">CHANGELOG</a> before you update to newer versions.
 
@@ -21,23 +21,23 @@ For upgrades you can see changes and enhancements in the <a href="https://github
 
 When you've [downloaded](#download) the "nakama-js.umd.js" file you should import it into your project to use it.
 
-```html
-<script src="path/to/dist/nakama-js.umd.js"></script>
-```
+	```html
+	<script src="path/to/dist/nakama-js.umd.js"></script>
+	```
 
 The client object is used to execute all logic against the server. In your main JavaScript function you'll need to create a client object:
 
-```js
-var client = new nakamajs.Client("defaultkey", "127.0.0.1", "7350");
-client.ssl = false;
-```
+	```js
+	var client = new nakamajs.Client("defaultkey", "127.0.0.1", "7350");
+	client.ssl = false;
+	```
 
 !!! Note
     By default the client uses connection settings "127.0.0.1" and "7350" to connect to a local Nakama server.
 
-```js
-var client = new nakamajs.Client("defaultkey");
-```
+	```js
+	var client = new nakamajs.Client("defaultkey");
+	```
 
 ## Authenticate
 
@@ -47,35 +47,35 @@ To authenticate you should follow our recommended pattern in your client code:
 
 &nbsp;&nbsp; 1\. Build an instance of the client.
 
-```js
-const client = new nakamajs.Client("defaultkey");
-```
+	```js
+	const client = new nakamajs.Client("defaultkey");
+	```
 
 &nbsp;&nbsp; 2\. Authenticate a user. By default Nakama will try and create a user if it doesn't exist.
 
 If you are in an environment that supports `localStorage` then use the following code to store the session:
 
-```js
-const email = "hello@example.com";
-const password = "somesupersecretpassword";
-const session = await client.authenticateEmail({
-  email: email,
-  password: password
-});
-// Store session for quick reconnects.
-localStorage.nakamaAuthToken = session.token;
-console.info("Authenticated successfully. User id:", session.user_id);
-```
+	```js
+	const email = "hello@example.com";
+	const password = "somesupersecretpassword";
+	const session = await client.authenticateEmail({
+	  email: email,
+	  password: password
+	});
+	// Store session for quick reconnects.
+	localStorage.nakamaAuthToken = session.token;
+	console.info("Authenticated successfully. User id:", session.user_id);
+	```
 
 For React Native you can use AsyncStorage:
 
-```js
-const customId = "someuniqueidentifier";
-const session = await client.authenticateCustom({ id: customId });
-// Store session for quick reconnects.
-AsyncStorage.setItem('@MyApp:nkAuthToken', session.token);
-console.info("Authenticated successfully. User id:", session.user_id);
-```
+	```js
+	const customId = "someuniqueidentifier";
+	const session = await client.authenticateCustom({ id: customId });
+	// Store session for quick reconnects.
+	AsyncStorage.setItem('@MyApp:nkAuthToken', session.token);
+	console.info("Authenticated successfully. User id:", session.user_id);
+	```
 
 In the code above we use `authenticateEmail` but for other authentication options have a look at the [code examples](authentication.md#register-or-login).
 
@@ -89,19 +89,19 @@ This could be to [add friends](social-friends.md), join [groups](social-groups-c
 
 The server also provides a [storage engine](storage-collections.md) to keep save games and other records owned by users. We'll use storage to introduce how messages are sent.
 
-```js
-const objects = [{
-  "collection": "collection",
-  "key": "key1",
-  "value": {"jsonKey": "jsonValue"}
-}, {
-  "collection": "collection",
-  "key": "key2",
-  "value": {"jsonKey": "jsonValue"}
-}];
-const storageWriteAck = await client.writeStorageObjects(session, objects);
-console.info("Storage write was successful:", storageWriteAck);
-```
+	```js
+	const objects = [{
+	  "collection": "collection",
+	  "key": "key1",
+	  "value": {"jsonKey": "jsonValue"}
+	}, {
+	  "collection": "collection",
+	  "key": "key2",
+	  "value": {"jsonKey": "jsonValue"}
+	}];
+	const storageWriteAck = await client.writeStorageObjects(session, objects);
+	console.info("Storage write was successful:", storageWriteAck);
+	```
 
 Have a look at other sections of documentation for more code examples.
 
@@ -111,38 +111,38 @@ You can connect to the server over a realtime WebSocket connection to send and r
 
 You first need to create a realtime socket to the server:
 
-```js
-const useSSL = false;
-const verboseLogging = false;
-// Send presence events to subscribed users.
-const createStatus = false;
-const socket = client.createSocket(useSSL, verboseLogging);
-var session = ""; // obtained by authentication.
-session = await socket.connect(session, createStatus);
-```
+	```js
+	const useSSL = false;
+	const verboseLogging = false;
+	// Send presence events to subscribed users.
+	const createStatus = false;
+	const socket = client.createSocket(useSSL, verboseLogging);
+	var session = ""; // obtained by authentication.
+	session = await socket.connect(session, createStatus);
+	```
 
 Then proceed to join a chat channel and send a message:
 
-```js
-socket.onchannelmessage = (channelMessage) => {
-  console.info("Received chat message:", channelMessage);
-};
-
-const channelId = "pineapple-pizza-lovers-room";
-var response = await socket.send({ channel_join: {
-  type: 1, // 1 = room, 2 = Direct Message, 3 = Group
-  target: channelId,
-  persistence: false,
-  hidden: false
-} });
-console.info("Successfully joined channel:", response.channel.id);
-
-const messageAck = await socket.send({ channel_message_send: {
-  channel_id: response.channel.id,
-  content: {"message": "Pineapple doesn't belong on a pizza!"}
-} });
-console.info("Successfully sent chat message:", messageAck);
-```
+	```js
+	socket.onchannelmessage = (channelMessage) => {
+	  console.info("Received chat message:", channelMessage);
+	};
+	
+	const channelId = "pineapple-pizza-lovers-room";
+	var response = await socket.send({ channel_join: {
+	  type: 1, // 1 = room, 2 = Direct Message, 3 = Group
+	  target: channelId,
+	  persistence: false,
+	  hidden: false
+	} });
+	console.info("Successfully joined channel:", response.channel.id);
+	
+	const messageAck = await socket.send({ channel_message_send: {
+	  channel_id: response.channel.id,
+	  content: {"message": "Pineapple doesn't belong on a pizza!"}
+	} });
+	console.info("Successfully sent chat message:", messageAck);
+	```
 
 You can find more information about the various chat features available [here](social-in-app-notifications.md).
 
@@ -150,38 +150,38 @@ You can find more information about the various chat features available [here](s
 
 A client socket has event listeners which are called on various events received from the server.
 
-```js
-socket.ondisconnect = (event) => {
-  console.info("Disconnected from the server. Event:", event);
-};
-socket.onnotification = (notification) => {
-  console.info("Received notification:", notification);
-};
-socket.onchannelpresence = (presence) => {
-  console.info("Received presence update:", presence);
-};
-socket.onchannelmessage = (message) => {
-  console.info("Received new chat message:", message);
-};
-socket.onmatchdata = (matchdata) => {
-  console.info("Received match data: %o", matchdata);
-};
-socket.onmatchpresence = (matchpresence) => {
-  console.info("Received match presence update:", matchpresence);
-};
-socket.onmatchmakermatched = (matchmakerMatched) => {
-  console.info("Received matchmaker update:", matchmakerMatched);
-};
-socket.onstatuspresence = (statusPresence) => {
-  console.info("Received status presence update:", statusPresence);
-};
-socket.onstreampresence = (streamPresence) => {
-  console.info("Received stream presence update:", streamPresence);
-};
-socket.onstreamdata = (streamdata) => {
-  console.info("Received stream data:", streamdata);
-};
-```
+	```js
+	socket.ondisconnect = (event) => {
+	  console.info("Disconnected from the server. Event:", event);
+	};
+	socket.onnotification = (notification) => {
+	  console.info("Received notification:", notification);
+	};
+	socket.onchannelpresence = (presence) => {
+	  console.info("Received presence update:", presence);
+	};
+	socket.onchannelmessage = (message) => {
+	  console.info("Received new chat message:", message);
+	};
+	socket.onmatchdata = (matchdata) => {
+	  console.info("Received match data: %o", matchdata);
+	};
+	socket.onmatchpresence = (matchpresence) => {
+	  console.info("Received match presence update:", matchpresence);
+	};
+	socket.onmatchmakermatched = (matchmakerMatched) => {
+	  console.info("Received matchmaker update:", matchmakerMatched);
+	};
+	socket.onstatuspresence = (statusPresence) => {
+	  console.info("Received status presence update:", statusPresence);
+	};
+	socket.onstreampresence = (streamPresence) => {
+	  console.info("Received stream presence update:", streamPresence);
+	};
+	socket.onstreamdata = (streamdata) => {
+	  console.info("Received stream data:", streamdata);
+	};
+	```
 
 Some events only need to be implemented for the features you want to use.
 
@@ -203,13 +203,13 @@ Some events only need to be implemented for the features you want to use.
 
 The [server](install-configuration.md#log) and the client can generate logs which are helpful to debug code. To log all messages sent by the client you can enable `verbose` when you build a `client`.
 
-```js
-const verboseLogging = true;
-const useSSL = false;
-var client = new nakamajs.Client("defaultkey");
-client.verbose = verboseLogging;
-client.createSocket(useSSL, verboseLogging);
-```
+	```js
+	const verboseLogging = true;
+	const useSSL = false;
+	var client = new nakamajs.Client("defaultkey");
+	client.verbose = verboseLogging;
+	client.createSocket(useSSL, verboseLogging);
+	```
 
 ---
 
@@ -217,72 +217,72 @@ client.createSocket(useSSL, verboseLogging);
 
 An example class used to manage a session with the JavaScript client.
 
-```js
-var client = new nakamajs.Client("defaultkey");
-var currentSession = null;
-
-function storeSession(session) {
-  if (typeof(Storage) !== "undefined") {
-    localStorage.setItem("nakamaToken", session.token);
-    console.log("Session stored.");
-  } else {
-    // We'll assume this is a React Native project.
-    AsyncStorage.setItem('@MyApp:nakamaToken', session.token).then(function(session) {
-      console.log("Session stored.");
-    }).catch(function(error) {
-      console.log("An error occured while storing session: %o", error);
-    })
-  };
-}
-
-async function getSessionFromStorage() {
-  if (typeof(Storage) !== "undefined") {
-    return Promise.resolve(localStorage.getItem("nakamaToken"));
-  } else {
-    try {
-      // Example assumes you use React Native.
-      return AsyncStorage.getItem('@MyApp:nakamaToken');
-    } catch(e) {
-      console.log("Could not fetch data, error: %o", error);
-    }
-  }
-}
-
-async function restoreSessionOrAuthenticate() {
-  const email = "hello@example.com";
-  const password = "somesupersecretpassword";
-  var session = null;
-  try {
-    var sessionString = await getSessionFromStorage();
-    if (sessionString && sessionString != "") {
-      session = nakamajs.Session.restore(sessionString);
-      var currentTimeInSec = new Date() / 1000;
-      if (!session.isexpired(currentTimeInSec)) {
-        console.log("Restored session. User ID: %o", session.user_id);
-        return Promise.resolve(session);
-      }
-    }
-
-    var session = await client.authenticateEmail({ email: email, password: password });
-    storeSession(session);
-
-    console.log("Authenticated successfully. User ID: %o", session.user_id);
-    return Promise.resolve(session);
-  } catch(e) {
-    console.log("An error occured while trying to restore session or authenticate user: %o", e)
-  }
-}
-
-restoreSessionOrAuthenticate().then(function(session) {
-  currentSession = session;
-  return client.writeStorageObjects(currentSession, [{
-    "collection": "collection",
-    "key": "key1",
-    "value": {"jsonKey": "jsonValue"}
-  }]);
-}).then(function(writeAck) {
-  console.log("Storage write was successful - ack: %o", writeAck);
-}).catch(function(e) {
-  console.log("An error occured: %o", e);
-});
-```
+	```js
+	var client = new nakamajs.Client("defaultkey");
+	var currentSession = null;
+	
+	function storeSession(session) {
+	  if (typeof(Storage) !== "undefined") {
+	    localStorage.setItem("nakamaToken", session.token);
+	    console.log("Session stored.");
+	  } else {
+	    // We'll assume this is a React Native project.
+	    AsyncStorage.setItem('@MyApp:nakamaToken', session.token).then(function(session) {
+	      console.log("Session stored.");
+	    }).catch(function(error) {
+	      console.log("An error occured while storing session: %o", error);
+	    })
+	  };
+	}
+	
+	async function getSessionFromStorage() {
+	  if (typeof(Storage) !== "undefined") {
+	    return Promise.resolve(localStorage.getItem("nakamaToken"));
+	  } else {
+	    try {
+	      // Example assumes you use React Native.
+	      return AsyncStorage.getItem('@MyApp:nakamaToken');
+	    } catch(e) {
+	      console.log("Could not fetch data, error: %o", error);
+	    }
+	  }
+	}
+	
+	async function restoreSessionOrAuthenticate() {
+	  const email = "hello@example.com";
+	  const password = "somesupersecretpassword";
+	  var session = null;
+	  try {
+	    var sessionString = await getSessionFromStorage();
+	    if (sessionString && sessionString != "") {
+	      session = nakamajs.Session.restore(sessionString);
+	      var currentTimeInSec = new Date() / 1000;
+	      if (!session.isexpired(currentTimeInSec)) {
+	        console.log("Restored session. User ID: %o", session.user_id);
+	        return Promise.resolve(session);
+	      }
+	    }
+	
+	    var session = await client.authenticateEmail({ email: email, password: password });
+	    storeSession(session);
+	
+	    console.log("Authenticated successfully. User ID: %o", session.user_id);
+	    return Promise.resolve(session);
+	  } catch(e) {
+	    console.log("An error occured while trying to restore session or authenticate user: %o", e)
+	  }
+	}
+	
+	restoreSessionOrAuthenticate().then(function(session) {
+	  currentSession = session;
+	  return client.writeStorageObjects(currentSession, [{
+	    "collection": "collection",
+	    "key": "key1",
+	    "value": {"jsonKey": "jsonValue"}
+	  }]);
+	}).then(function(writeAck) {
+	  console.log("Storage write was successful - ack: %o", writeAck);
+	}).catch(function(e) {
+	  console.log("An error occured: %o", e);
+	});
+	```

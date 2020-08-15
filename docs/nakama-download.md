@@ -6,9 +6,9 @@ All Nakama versions are available for download from the GitHub Release page. In 
 
 Nakama is available to be pulled in via Docker:
 
-```bash
-docker run heroiclabs/nakama
-```
+	```bash
+	docker run heroiclabs/nakama
+	```
 
 Follow the [quickstart guide](install-docker-quickstart.md) to install and run Nakama and dependencies on your machine.
 

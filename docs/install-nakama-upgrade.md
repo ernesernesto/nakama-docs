@@ -15,23 +15,26 @@ As new versions of Nakama, or CockroachDB, become available you might want to up
 
 You can pull down the most recent Nakama image and allow Docker Compose to perform the data migration.
 
-```shell tab="Shell"
-docker-compose down # top and remove both the Nakama and CockroachDB containers
-docker pull heroiclabs/nakama # download the latest Nakama image
-docker-compose up # start the containers (both Nakama and CockroachDB) as fresh installss
-```
+=== "Shell"
+	```shell
+	docker-compose down # top and remove both the Nakama and CockroachDB containers
+	docker pull heroiclabs/nakama # download the latest Nakama image
+	docker-compose up # start the containers (both Nakama and CockroachDB) as fresh installss
+	```
 
 And, similarly, here’s how to update the CockroachDB container:
 
-```shell tab="Shell"
-docker pull cockroachdb/cockroach # download the latest CockroachDB image
-```
+=== "Shell"
+	```shell
+	docker pull cockroachdb/cockroach # download the latest CockroachDB image
+	```
 
 If you'd like to explicity run a database schema migration, issue the following command:
 
-```shell tab="Shell"
-docker run heroiclabs/nakama migrate up
-```
+=== "Shell"
+	```shell
+	docker run heroiclabs/nakama migrate up
+	```
 
 ## Manual upgrade
 
@@ -41,35 +44,35 @@ For each node in the cluster:
 
 1\. Stop Nakama. If you are using `systemd` on a Linux setup, the command is:
 
-```shell
-sudo systemctl stop nakama
-```
+	```shell
+	sudo systemctl stop nakama
+	```
 
 2\. Back-up CockroachDB
 
-```shell
-cockroach dump nakama > mydatabackup.sql --insecure
-```
+	```shell
+	cockroach dump nakama > mydatabackup.sql --insecure
+	```
 
 3\. Download the [latest release](https://github.com/heroiclabs/nakama/releases/latest) and replace the `nakama` binary with the newer download.
 4\. Upgrade the database schema with the following command:
 
-```shell
-nakama migrate up
-```
+	```shell
+	nakama migrate up
+	```
 
 !!! tip "Downgrade"
     To downgrade Nakama you can follow the same procedure, but replace the migration command with the following:
 
-    ```
-    nakama migrate down --limit 1
-    ```
+    	```
+	    nakama migrate down --limit 1
+	    ```
 
 5\. Start Nakama and verify that the upgraded version is running.
 
-```shell
-sudo systemctl start nakama
-```
+	```shell
+	sudo systemctl start nakama
+	```
 
 ## Upgrade from Nakama 1
 
@@ -84,9 +87,9 @@ If you've used Nakama 1 with Docker Compose then you'll need to delete the datab
 
 This will remove the Docker storage volumes which contain the database files and you can start the servers with Docker and a new database.
 
-```sh
-docker-compose -f ./docker-compose.yml down -v
-```
+	```sh
+	docker-compose -f ./docker-compose.yml down -v
+	```
 
 Follow this [guide to continue](install-docker-quickstart.md#using-docker-compose).
 
@@ -94,15 +97,15 @@ Follow this [guide to continue](install-docker-quickstart.md#using-docker-compos
 
 If you've used Nakama 1 using a Docker container then you'll need to delete the database volume and start again:
 
-```sh
-docker volume ls
-```
+	```sh
+	docker volume ls
+	```
 
 Find the relevant volume and delete the database volume. This will delete all database files - tables and records.
 
-```
-docker volume rm <volumename>
-```
+	```
+	docker volume rm <volumename>
+	```
 
 Follow this [guide to continue](install-start-server.md).
 
@@ -110,8 +113,8 @@ Follow this [guide to continue](install-start-server.md).
 
 You'll need to connect to the database directly and issue the following command:
 
-```sh
-cockroach sql --insecure -e "DROP DATABASE nakama CASCADE;"
-```
+	```sh
+	cockroach sql --insecure -e "DROP DATABASE nakama CASCADE;"
+	```
 
 Follow this [guide to continue](install-start-server.md).

@@ -8,9 +8,9 @@ With the server downloaded or accessible you can start it. You must first start 
 
 You can start the database server with this command:
 
-```sh
-cockroach start --background --insecure --store=path="./cdb-store1/"
-```
+	```sh
+	cockroach start --background --insecure --store=path="./cdb-store1/"
+	```
 
 This will start CockroachDB in the background, on port `26257` and sets the data directory for the database to the folder "cdb-store1" within the current working directory of the shell environment. For more examples have a look at the [database documentation](https://www.cockroachlabs.com/docs/stable/start-a-local-cluster.html).
 
@@ -18,29 +18,29 @@ This will start CockroachDB in the background, on port `26257` and sets the data
 
 Before you can start the server you must setup the database schema. The schema definition is bundled within the server and can be executed with this command:
 
-```sh
-nakama migrate up
-```
+	```sh
+	nakama migrate up
+	```
 
 If you've configured your database to run with specific connection settings have a look at how to configure the [migrate command](install-server-cli.md#migrate).
 
 When the command runs you'll see logs output to the shell console.
 
-```
-{"level":"info","ts":"<sometimestamp>","msg":"Database connection","db":"root@localhost:26257"}
-{"level":"info","ts":"<sometimestamp>","msg":"Database information","version":"CockroachDB CCL v1.1.5"}
-{"level":"info","ts":"<sometimestamp>","msg":"Using existing database","name":"nakama"}
-{"level":"info","ts":"<sometimestamp>","msg":"Successfully applied migration","count":1}
-```
+	```
+	{"level":"info","ts":"<sometimestamp>","msg":"Database connection","db":"root@localhost:26257"}
+	{"level":"info","ts":"<sometimestamp>","msg":"Database information","version":"CockroachDB CCL v1.1.5"}
+	{"level":"info","ts":"<sometimestamp>","msg":"Using existing database","name":"nakama"}
+	{"level":"info","ts":"<sometimestamp>","msg":"Successfully applied migration","count":1}
+	```
 
 The logs indicate how many migrations were run to update the schema definition in the database to the latest version with the release of the server. You will only need to migrate the server once with each new server release. This command does __not__ need to be run before each server start.
 
 You can now start the [server](install-binary.md).
 
-```sh
-# start the server and output logs to the terminal
-nakama
-```
+	```sh
+	# start the server and output logs to the terminal
+	nakama
+	```
 
 The logs output from the server will tell you:
 
@@ -57,26 +57,26 @@ The [configuration](install-configuration.md) section covers all the various ser
 
 By default the server will connect to the database on a local address with the default port number. You can configure a custom address and database name:
 
-```sh
-# migrate command
-nakama migrate up --database.address "username@database-host:port/database-name"
-# startup command
-nakama --database.address "username@database-host:port/database-name"
-```
+	```sh
+	# migrate command
+	nakama migrate up --database.address "username@database-host:port/database-name"
+	# startup command
+	nakama --database.address "username@database-host:port/database-name"
+	```
 
 If you've setup CockroachDB in secure mode you can pass in certificate information:
 
-```sh
-nakama --database.address "username@database-host:port/database-name?sslcert=path/to/cert.der&sslkey=path/to/somekey.key.pk8&sslmode=require"
-```
+	```sh
+	nakama --database.address "username@database-host:port/database-name?sslcert=path/to/cert.der&sslkey=path/to/somekey.key.pk8&sslmode=require"
+	```
 
 ### Server name
 
 The server uses a unique random name each time it is started. This is essential for identifying the server when running multiple instances as part of a cluster or on a single node. You can set the server name for logs and other output to be same each time it's run.
 
-```sh
-nakama --name "nakama1"
-```
+	```sh
+	nakama --name "nakama1"
+	```
 
 ## Data directory
 
@@ -88,9 +88,9 @@ Nakama writes all logs to a file in the data directory. The log file name is the
 
 By default Nakama logs messages with level "INFO", "WARN" and "ERROR". However you can change this:
 
-```sh
-nakama --logger.level "debug"
-```
+	```sh
+	nakama --logger.level "debug"
+	```
 
 ### Lua modules
 
@@ -98,9 +98,9 @@ At startup the server walks the modules directory for all files which end in ".l
 
 The default location of modules is the "modules" folder within the data directory ("./data/modules"). You can override this with your own location for Lua modules.
 
-```sh
-nakama --runtime.path "path/to/modules"
-```
+	```sh
+	nakama --runtime.path "path/to/modules"
+	```
 
 ## Start/join cluster
 
@@ -111,21 +111,21 @@ The clustered version of Nakama server builds in gossip, node awareness, state r
 
 An enterprise server will join a cluster if one is already known to the instance it joins or create a new cluster.
 
-```sh
-nakama --name "nakama1"
-```
+	```sh
+	nakama --name "nakama1"
+	```
 
 You can start a second node and join the cluster.
 
-```sh
-nakama --name "nakama2" --cluster.join "localhost:7352"
-```
+	```sh
+	nakama --name "nakama2" --cluster.join "localhost:7352"
+	```
 
 If you'd like to run both instances on the same machine you must also give each server unique ports to listen on.
 
-```sh
-# node 1
-nakama --name "nakama1"
-# node 2
-nakama --name "nakama2" --cluster.join "localhost:7352" --socket.port 7360 --dashboard.port 7361 --cluster.gossip_bindport 7362 --cluster.rpc_port 7363
-```
+	```sh
+	# node 1
+	nakama --name "nakama1"
+	# node 2
+	nakama --name "nakama2" --cluster.join "localhost:7352" --socket.port 7360 --dashboard.port 7361 --cluster.gossip_bindport 7362 --cluster.rpc_port 7363
+	```
